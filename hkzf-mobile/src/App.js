@@ -1,7 +1,7 @@
-
+import {Button} from 'antd-mobile'
 function App() {
   return (
-   <h1>App</h1>
+   <h1>App <Button>登录</Button></h1>
   );
 }
 
