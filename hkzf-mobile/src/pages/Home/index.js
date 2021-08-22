@@ -1,6 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react'
 import New from '../New'
+import Index from '../Index'
+import HouseList from '../HouseList'
+import Profile from '../Profile'
 import { Route } from 'react-router'
 // 导入TabBar
 import { TabBar } from 'antd-mobile';
@@ -8,45 +11,26 @@ import './index.css'
 
 export default class Home extends Component {
     state = {
-        selectedTab: 'redTab',
+        // 默认选中的路由地址
+        selectedTab: this.props.location.pathname,
     };
-    renderContent(pageText) {
-        return (
-            <div style={{ backgroundColor: 'white', height: '100%', textAlign: 'center' }}>
-                <div style={{ paddingTop: 60 }}>Clicked “{pageText}” tab， show “{pageText}” information</div>
-                <a style={{ display: 'block', marginTop: 40, marginBottom: 20, color: '#108ee9' }}
-                    onClick={(e) => {
-                        e.preventDefault();
-                        this.setState({
-                            hidden: !this.state.hidden,
-                        });
-                    }}
-                >
-                    Click to show/hide tab-bar
-                </a>
-                <a style={{ display: 'block', marginBottom: 600, color: '#108ee9' }}
-                    onClick={(e) => {
-                        e.preventDefault();
-                        this.setState({
-                            fullScreen: !this.state.fullScreen,
-                        });
-                    }}
-                >
-                    Click to switch fullscreen
-                </a>
-            </div>
-        );
-    }
+   
     render() {
+        // console.log(this.props.location.pathname)
         return (
-            <div>
+            
+            <div className='home'>
                 {/* 渲染子路由 */}
-                <Route path="/home/new" component={New}></Route>
+                <Route path="/home/index" component={Index}></Route>
+                <Route path="/home/list" component={HouseList}></Route>
+                <Route path="/home/news" component={New}></Route>
+                <Route path="/home/profile" component={Profile}></Route>
                 {/* TabBar */}
 
                 <TabBar
                     tintColor="#21b97a"
                     barTintColor="white"
+                    noRenderContent={true}
                 >
                     <TabBar.Item
                         title="首页"
@@ -56,15 +40,16 @@ export default class Home extends Component {
                         }
                         selectedIcon={<i className='iconfont icon-ind'></i>
                         }
-                        selected={this.state.selectedTab === 'blueTab'}
+                        selected={this.state.selectedTab === '/home/index'}
                         onPress={() => {
                             this.setState({
-                                selectedTab: 'blueTab',
+                                selectedTab: '/home/index',
                             });
+                            // 路由跳转
+                            this.props.history.push('/home/index')
                         }}
                         data-seed="logId"
                     >
-                        {this.renderContent('Life')}
                     </TabBar.Item>
                     <TabBar.Item
                         icon={
@@ -75,15 +60,15 @@ export default class Home extends Component {
                         }
                         title="找房"
                         key="Koubei"
-                        selected={this.state.selectedTab === 'redTab'}
+                        selected={this.state.selectedTab === '/home/list'}
                         onPress={() => {
                             this.setState({
-                                selectedTab: 'redTab',
+                                selectedTab: '/home/list',
                             });
+                            this.props.history.push('/home/list')
                         }}
                         data-seed="logId1"
                     >
-                        {this.renderContent('Koubei')}
                     </TabBar.Item>
                     <TabBar.Item
                         icon={
@@ -94,28 +79,28 @@ export default class Home extends Component {
                         }
                         title="资讯"
                         key="Friend"
-                        selected={this.state.selectedTab === 'greenTab'}
+                        selected={this.state.selectedTab === '/home/news'}
                         onPress={() => {
                             this.setState({
-                                selectedTab: 'greenTab',
+                                selectedTab: '/home/news',
                             });
+                            this.props.history.push('/home/news')
                         }}
                     >
-                        {this.renderContent('Friend')}
                     </TabBar.Item>
                     <TabBar.Item
                         icon={<i className='iconfont icon-my'></i>}
                         selectedIcon={<i className='iconfont icon-my'></i>}
                         title="我的"
                         key="my"
-                        selected={this.state.selectedTab === 'yellowTab'}
+                        selected={this.state.selectedTab === '/home/profile'}
                         onPress={() => {
                             this.setState({
-                                selectedTab: 'yellowTab',
+                                selectedTab: '/home/profile',
                             });
+                            this.props.history.push('/home/profile')
                         }}
                     >
-                        {this.renderContent('My')}
                     </TabBar.Item>
                 </TabBar>
             </div>
