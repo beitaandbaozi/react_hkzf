@@ -1,0 +1,21 @@
+/* .am-carousel-wrap {
+    margin-top: -50px;
+} */
+
+.nav {
+    padding: 10px;
+}
+
+.nav img {
+    width:48px;
+}
+
+.nav h2 {
+    font-weight: normal;
+    font-size: 13px;
+    margin-top: 7px;
+}
+
+.nav .am-flexbox-item {
+    text-align: center;
+}
