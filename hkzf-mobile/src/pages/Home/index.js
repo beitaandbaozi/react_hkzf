@@ -35,13 +35,33 @@ const tabItems = [
     },
 ]
 
-
+/**
+ * 问题：点击首页导航菜单，导航到找房列表时，TabBar对应的没有高亮操作
+ * 原因：原来实现该功能的时候，只考虑了 点击以及第一次加载 Home组件的情况。但是，我们没有考虑不重新加载 Home组件的路由器切换状况。
+ * 解决方法：
+ *          思路：在路由切换的时，也执行菜单高亮的逻辑代码
+ *          1. 添加 componentDidUpdate 钩子函数
+ *          2. 在钩子函数中判断路由地址是否正确
+ *          3.在路由地址切换时，让 菜单高亮
+ */
 
 export default class Home extends Component {
     state = {
         // 默认选中的路由地址
         selectedTab: this.props.location.pathname,
     };
+
+    // 路由变化时，触发
+    componentDidUpdate(prevProps){
+        if(prevProps.location.pathname !== this.props.location.pathname){
+            // 此时，就说明路由切换了
+            this.setState({
+                selectedTab:this.props.location.pathname
+            })
+
+        }
+    }
+
 
     //  TabBar-item
     renderTabBarItem() {
