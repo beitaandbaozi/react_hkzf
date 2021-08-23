@@ -1,17 +1,40 @@
 import React, { Component } from 'react'
 import { Carousel } from 'antd-mobile';
+import axios from 'axios'
 
 export default class index extends Component {
     state = {
-        data: ['1', '2', '3'],
+        // 轮播图数据
+        swipers: [],
+    }
+    // 获取轮播图
+    async getSwiper() {
+        const {data:{body}} = await axios.get('http://localhost:8080/home/swiper')
+        console.log(body);
+        this.setState({
+            swipers: body
+        })
+
+    }
+    // 渲染轮播图
+    renderSwiper() {
+        return this.state.swipers.map (item => (
+            <a
+                key={item.id}
+                href='http://itcast.cn'
+                style={{ display: 'inline-block', width: '100%', height: 212 }}
+            >
+                <img
+                    src={`http://localhost:8080${item.imgSrc}`}
+                    alt=""
+                    style={{ width: '100%', verticalAlign: 'top' }}
+                />
+            </a>)
+        )
     }
     componentDidMount() {
         // simulate img loading
-        setTimeout(() => {
-            this.setState({
-                data: ['AiyWuByWklrrUDlFignR', 'TekJlZRVCjLFexlOCuWn', 'IJOtIlfsYdTyaDTRVrLI'],
-            });
-        }, 100);
+        this.getSwiper()
     }
     render() {
         return (
@@ -21,19 +44,7 @@ export default class index extends Component {
                     infinite
                     autoplayInterval={2000}
                 >
-                    {this.state.data.map(val => (
-                        <a
-                            key={val}
-                            href="http://www.alipay.com"
-                            style={{ display: 'inline-block', width: '100%', height: 212}}
-                        >
-                            <img
-                                src={`https://zos.alipayobjects.com/rmsportal/${val}.png`}
-                                alt=""
-                                style={{ width: '100%', verticalAlign: 'top' }}
-                            />
-                        </a>
-                    ))}
+                 {this.renderSwiper()}
                 </Carousel>
             </div>
         );
