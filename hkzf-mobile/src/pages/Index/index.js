@@ -10,35 +10,47 @@ import Nav4 from '../../assets/images/nav-4.png'
 import './index.css'
 
 export default class index extends Component {
+    /**
+     * 轮播图存在两个问题
+     * 1.不会自动播放
+     * 2.从其他路由返回的时候，高度不够
+     * 
+     * 原因： 轮播图是动态加载的，加载完成前后轮播图数量不一样
+     * 解决方法：
+     *       1.在state中添加轮播图加载完成的数据
+     *      2.在轮播图数据加载完成时，修改该数据状态为true
+     *      3.只有轮播图数据加载完成的情况下，才渲染轮播图组件
+     *         
+     */
     state = {
-        // 轮播图数据
         swipers: [],
+        isSwiper: false,
         // 导航菜单数据
         navList: [
             {
-                id:1,
+                id: 1,
                 img: Nav1,
                 name: '整租',
-                path:'/home/list'
+                path: '/home/list'
             },
             {
-                id:2,
+                id: 2,
                 img: Nav2,
                 name: '合租',
-                path:'/home/list'
+                path: '/home/list'
 
             },
             {
-                id:3,
+                id: 3,
                 img: Nav3,
                 name: '地图找房',
-                path:'/map'
+                path: '/map'
             },
             {
-                id:4,
+                id: 4,
                 img: Nav4,
                 name: '出租',
-                path:'/rent'
+                path: '/rent'
             }
         ]
     }
@@ -47,7 +59,8 @@ export default class index extends Component {
         const { data: { body } } = await axios.get('http://localhost:8080/home/swiper')
         console.log(body);
         this.setState({
-            swipers: body
+            swipers: body,
+            isSwiper: true
         })
 
     }
@@ -69,12 +82,12 @@ export default class index extends Component {
     }
     // 渲染导航菜单
     renderNav() {
-        return  this.state.navList.map(item => (
-           <Flex.Item key={item.id} 
-           onClick={()=>this.props.history.push(item.path)}>
-            <img src={item.img} alt='nav'></img>
-            <h2>{item.name}</h2>
-        </Flex.Item>
+        return this.state.navList.map(item => (
+            <Flex.Item key={item.id}
+                onClick={() => this.props.history.push(item.path)}>
+                <img src={item.img} alt='nav'></img>
+                <h2>{item.name}</h2>
+            </Flex.Item>
         ))
 
     }
@@ -86,13 +99,17 @@ export default class index extends Component {
         return (
             <div className='index'>
                 {/* 轮播图 */}
-                <Carousel
-                    autoplay={true}
-                    infinite
-                    autoplayInterval={2000}
-                >
-                    {this.renderSwiper()}
-                </Carousel>
+                
+                {this.state.isSwiper ?
+                    <Carousel
+                        autoplay={true}
+                        infinite
+                        autoplayInterval={2000}
+                    >
+                        {this.renderSwiper()}
+                    </Carousel> : ''
+                }
+
                 {/* 导航菜单 */}
                 <Flex className='nav'>
                     {this.renderNav()}
