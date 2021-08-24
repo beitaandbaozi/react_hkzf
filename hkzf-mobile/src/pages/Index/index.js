@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Carousel, Flex, Grid } from 'antd-mobile';
+import { Carousel, Flex, Grid, WingBlank } from 'antd-mobile';
 import axios from 'axios'
 // 导入图片
 import Nav1 from '../../assets/images/nav-1.png'
@@ -58,8 +58,43 @@ export default class index extends Component {
             }
         ],
         // 租房小组数据
-        housesGroups: []
+        housesGroups: [],
+        // 最新资讯
+        news: []
 
+    }
+    // 获取最新资讯
+    async getNews() {
+        const { data: { body } } = await axios.get('http://localhost:8080/home/news', {
+            params: {
+                area: 'AREA%7C88cff55c-aaa4-e2e0'
+            }
+        })
+        this.setState({
+            news: body
+        })
+    }
+    renderNews() {
+        return this.state.news.map(item => {
+            return (
+                <div className="news-item" key={item.id}>
+                    <div className="imgwrap">
+                        <img
+                            className="img"
+                            src={`http://localhost:8080${item.imgSrc}`}
+                            alt=""
+                        />
+                    </div>
+                    <Flex className="content" direction="column" justify="between">
+                        <h3 className="title">{item.title}</h3>
+                        <Flex className="info" justify="between">
+                            <span>{item.from}</span>
+                            <span>{item.date}</span>
+                        </Flex>
+                    </Flex>
+                </div>
+            )
+        })
     }
     // 获取租房小组
     async getHouseGroup() {
@@ -129,6 +164,7 @@ export default class index extends Component {
         // simulate img loading
         this.getSwiper()
         this.getHouseGroup()
+        this.getNews()
     }
     render() {
         return (
@@ -155,6 +191,11 @@ export default class index extends Component {
                         租房小组 <span className="more">更多</span>
                     </h3>
                     <Grid data={this.state.housesGroups} columnNum={2} square={false} hasLine={false} renderItem={item => this.renderHouseGroup(item)} />
+                </div>
+                {/* 最新资讯 */}
+                <div className="news">
+                    <h3 className="group-title">最新资讯</h3>
+                    <WingBlank size={'md'}>{this.renderNews()}</WingBlank>
                 </div>
             </div>
         );
