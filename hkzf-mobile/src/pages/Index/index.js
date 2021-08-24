@@ -52,7 +52,21 @@ export default class index extends Component {
                 name: '出租',
                 path: '/rent'
             }
-        ]
+        ],
+        // 租房小组数据
+        housesGroups:[]
+
+    }
+    // 获取租房小组
+    async getHouseGroup(){
+        const {data:{body}} = await axios.get('http://localhost:8080/home/groups',{
+            params:{
+                area:'AREA%7C88cff55c-aaa4-e2e0' //后期根据位置来传递这个参数
+            }
+        })
+        this.setState({
+            housesGroups:body
+        })
     }
     // 获取轮播图
     async getSwiper() {
@@ -94,6 +108,7 @@ export default class index extends Component {
     componentDidMount() {
         // simulate img loading
         this.getSwiper()
+        this.getHouseGroup()
     }
     render() {
         return (
