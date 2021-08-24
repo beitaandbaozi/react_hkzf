@@ -10,6 +10,14 @@ import Nav4 from '../../assets/images/nav-4.png'
 import './index.scss'
 
 
+// 获取地理位置（经纬度等）
+navigator.geolocation.getCurrentPosition(position => {
+    console.log('当前的位置', position);
+})
+
+
+
+
 
 
 export default class index extends Component {
@@ -60,7 +68,9 @@ export default class index extends Component {
         // 租房小组数据
         housesGroups: [],
         // 最新资讯
-        news: []
+        news: [],
+        // 城市名称
+        cityName:''
 
     }
     // 获取最新资讯
@@ -74,6 +84,7 @@ export default class index extends Component {
             news: body
         })
     }
+    // 渲染最新资讯
     renderNews() {
         return this.state.news.map(item => {
             return (
@@ -122,7 +133,6 @@ export default class index extends Component {
 
     }
 
-
     // 获取轮播图
     async getSwiper() {
         const { data: { body } } = await axios.get('http://localhost:8080/home/swiper')
@@ -165,6 +175,17 @@ export default class index extends Component {
         this.getSwiper()
         this.getHouseGroup()
         this.getNews()
+        // 百度地图API实现定位功能
+        const myCity = new window.BMapGL.LocalCity();
+        myCity.get(async (res)=>{
+            // console.log('当前城市',res);
+            // 根据获取的城市作为传参，获取接口上对应城市的数据
+            const {data:{body}} = await axios.get(`http://localhost:8080/area/info?name=${res.name}`)
+            this.setState({
+                cityName:body.label
+            })
+
+        });
     }
     render() {
         return (
@@ -186,7 +207,7 @@ export default class index extends Component {
                         <Flex className="search">
                             {/* 位置 */}
                             <div className="location" onClick={() => this.props.history.push('/citylist')}>
-                                <span className="name">长沙</span>
+                                <span className="name">{this.state.cityName}</span>
                                 <i className="iconfont icon-arrow" />
                             </div>
 
@@ -197,7 +218,7 @@ export default class index extends Component {
                             </div>
                         </Flex>
                         {/* 右侧地图图标 */}
-                        <i className="iconfont icon-map" onClick={() => this.props.history.push('/map')}/>
+                        <i className="iconfont icon-map" onClick={() => this.props.history.push('/map')} />
                     </Flex>
                 </div>
                 {/* 导航菜单 */}
