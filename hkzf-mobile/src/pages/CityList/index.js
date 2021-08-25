@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { NavBar, } from 'antd-mobile';
 import './index.scss'
 import axios from 'axios'
+import { getCurrentCity } from '../../utils/index'
 
 // 处理获取的城市数据
 function formatCityData(list) {
@@ -33,6 +34,20 @@ export default class CityList extends Component {
         const { data: { body } } = await axios.get('http://localhost:8080/area/city?level=1')
         let { cityList, cityIndex } = formatCityData(body)
         console.log(cityList, cityIndex);
+
+        /**
+         * 获取热门城市数据
+         * 
+         */
+        const { data: { body: hotCitys } } = await axios.get('http://localhost:8080/area/hot')
+        // console.log(hotCitys);
+        cityList['host'] = hotCitys
+        cityIndex.unshift('hot')
+
+        // 获取当前定位的城市
+        const currentCity = await getCurrentCity()
+    
+        console.log(cityList, cityIndex,currentCity);
     }
     componentDidMount() {
         this.getCityList()
@@ -46,7 +61,6 @@ export default class CityList extends Component {
                     mode="light"
                     icon={<i className='iconfont icon-back' />}
                     onLeftClick={() => console.log(this.props.history.go(-1))}
-
                 >城市选择</NavBar>
             </div>
         )

@@ -9,6 +9,8 @@ import Nav4 from '../../assets/images/nav-4.png'
 // 导入样式
 import './index.scss'
 
+import {getCurrentCity} from '../../utils/index'
+
 
 // 获取地理位置（经纬度等）
 navigator.geolocation.getCurrentPosition(position => {
@@ -170,22 +172,26 @@ export default class index extends Component {
         ))
 
     }
-    componentDidMount() {
+    async componentDidMount() {
         // simulate img loading
         this.getSwiper()
         this.getHouseGroup()
         this.getNews()
-        // 百度地图API实现定位功能
-        const myCity = new window.BMapGL.LocalCity();
-        myCity.get(async (res)=>{
-            // console.log('当前城市',res);
-            // 根据获取的城市作为传参，获取接口上对应城市的数据
-            const {data:{body}} = await axios.get(`http://localhost:8080/area/info?name=${res.name}`)
-            this.setState({
-                cityName:body.label
-            })
-
-        });
+        // // 百度地图API实现定位功能
+        // const myCity = new window.BMapGL.LocalCity();
+        // myCity.get(async (res)=>{
+        //     // console.log('当前城市',res);
+        //     // 根据获取的城市作为传参，获取接口上对应城市的数据
+        //     const {data:{body}} = await axios.get(`http://localhost:8080/area/info?name=${res.name}`)
+        //     this.setState({
+        //         cityName:body.label
+        //     })
+        // });
+        // 获取当前定位的城市
+        const currentCity = await getCurrentCity()
+        this.setState({
+            cityName: currentCity.label
+        })
     }
     render() {
         return (
