@@ -5,7 +5,11 @@ import App from './App';
 import 'antd-mobile/dist/antd-mobile.css'
 // 导入字体图标库
 import './assets/fonts/iconfont.css'
+// 引入react-virtualized样式
+import 'react-virtualized/styles.css'
+
 import './index.css'
+
 ReactDOM.render(
   <App />,
   document.getElementById('root')

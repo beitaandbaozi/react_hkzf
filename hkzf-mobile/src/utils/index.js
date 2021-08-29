@@ -8,8 +8,6 @@ export const getCurrentCity = () => {
         return new Promise((resolve, reject) => {
             try {
 
-
-
                 // 获取当前城市信息
                 var myCity = new window.BMapGL.LocalCity();
                 myCity.get(async res => {
