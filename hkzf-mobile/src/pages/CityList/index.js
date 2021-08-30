@@ -255,7 +255,7 @@ export default class CityList extends React.Component {
         return (
             <div className="citylist">
                 {/* 顶部导航栏 */}
-                <NavHead>城市找房</NavHead>
+                <NavHead>城市选择</NavHead>
 
                 {/* 城市列表 */}
                 <AutoSizer>
