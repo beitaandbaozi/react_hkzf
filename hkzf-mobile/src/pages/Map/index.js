@@ -16,9 +16,7 @@ export default class index extends Component {
         return (
             <div className='map'>
                 {/* 顶部导航  */}
-                <NavHead
-                    
-                >地图找房</NavHead>
+                <NavHead>地图找房</NavHead>
                 {/* 地图容器元素 */}
                 <div id='container'></div>
             </div>

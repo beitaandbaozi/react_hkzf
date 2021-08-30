@@ -3,6 +3,10 @@ import { NavBar } from 'antd-mobile'
 import {withRouter} from 'react-router-dom'
 import './index.scss'
 
+// 导入 props 校验的包
+import PropTypes from 'prop-types'
+
+
 /* 
   注意：默认情况下，只有路由 Route 直接渲染的组件才能够获取到路由信息（比如：history.go()等）
   如果需要在其他组件中获取到路由信息可以通过 withRouter 高阶组件来获取。
@@ -33,6 +37,11 @@ class NavHead extends Component {
                 </NavBar>
         )
     }
+}
+
+NavHead.propTypes = {
+    children:PropTypes.string.isRequired,
+    onLeftClick:PropTypes.func
 }
 
 export default withRouter(NavHead)
