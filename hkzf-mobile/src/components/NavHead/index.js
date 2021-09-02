@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { NavBar } from 'antd-mobile'
 import {withRouter} from 'react-router-dom'
-import './index.scss'
+
+// import './index.scss'
+import styles from './index.module.css'
 
 // 导入 props 校验的包
 import PropTypes from 'prop-types'
@@ -28,7 +30,7 @@ class NavHead extends Component {
     render() {
         return (
             <NavBar
-                    className="navbar"
+                    className={styles.navBar}
                     mode="light"
                     icon={<i className="iconfont icon-back" />}
                     onLeftClick={this.props.onLeftClick || this.defaultHandler}
