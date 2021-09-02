@@ -45,8 +45,26 @@ export default class index extends Component {
                 // 添加常用控件
                 map.addControl(new BMapGL.ScaleControl())
                 map.addControl(new BMapGL.ZoomControl())
-            } else {
-                alert('您选择的地址没有解析到结果！');
+
+                /**
+                 * 创建文本覆盖物
+                 * 1.创建 Label 实例对象
+                 * 2.调用 setStyle() 方法设置样式
+                 * 3.在 map 对象上调用 addOverlay() 方法，将文本覆盖物添加到地图中
+                 */
+                const opts = {
+                    position:point
+                }
+                const label = new BMapGL.Label('beita',opts)
+                // 设置样式
+                label.setStyle({
+                    color:'lightblue'
+                })
+                // 添加覆盖物到地图中
+                map.addOverlay(label)
+
+
+
             }
         }, label)
 
