@@ -7,6 +7,7 @@ import axios from 'axios'
 
 import { Link } from 'react-router-dom'
 
+import { Toast } from 'antd-mobile'
 // 引入组件
 import NavHead from '../../components/NavHead'
 //  解决脚手架全局变量访问的问题
@@ -73,15 +74,26 @@ export default class Map extends Component {
      * 2、获取房源类型以及下级地图的缩放级别
      */
     async renderOverlays(id) {
-        const { data: { body } } = await axios.get(`http://localhost:8080/area/map?id=${id}`)
+        try {
+            // 开启loading 效果
+            Toast.loading('加载中...', 0, null, false)
+            const { data: { body } } = await axios.get(`http://localhost:8080/area/map?id=${id}`)
 
-        //  调用 getTypeAndZoom 方法获取级别和类型
-        const { nextZoom, type } = this.getTypeAndZoom()
+            // 关闭loading
+            Toast.hide()
 
-        // 创建覆盖物
-        body.forEach(item => {
-            this.createOverlays(item, nextZoom, type)
-        });
+            //  调用 getTypeAndZoom 方法获取级别和类型
+            const { nextZoom, type } = this.getTypeAndZoom()
+
+            // 创建覆盖物
+            body.forEach(item => {
+                this.createOverlays(item, nextZoom, type)
+            });
+        } catch (error) {
+            // 关闭loading
+            Toast.hide()
+        }
+
 
     }
     /**
@@ -212,13 +224,22 @@ export default class Map extends Component {
     }
     // 获取小区房源数据
     async getHousesList(id) {
-        const res = await axios.get(`http://localhost:8080/houses?cityId=${id}`)
-        // console.log('小区的房源数据:', res)
-        this.setState({
-            housesList: res.data.body.list,
-            // 展示房源列表
-            isShowList: true
-        })
+        try {
+            // 开启loading 效果
+            Toast.loading('加载中...', 0, null, false)
+            const res = await axios.get(`http://localhost:8080/houses?cityId=${id}`)
+            // console.log('小区的房源数据:', res)
+
+            this.setState({
+                housesList: res.data.body.list,
+                // 展示房源列表
+                isShowList: true
+            })
+        } catch (error) {
+            // 关闭 Loading
+            Toast.hide()
+        }
+
     }
 
     // 渲染房屋列表的item方法
