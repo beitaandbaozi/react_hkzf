@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 // import './index.scss'
 import styles from './index.module.css'
 
+import axios from 'axios'
+
 
 // 引入组件
 import NavHead from '../../components/NavHead'
@@ -17,7 +19,7 @@ const labelStyle = {
     fontSize: '12px',
     color: 'rgb(255, 255, 255)',
     textAlign: 'center'
-  }
+}
 
 export default class index extends Component {
     // 初始化地图
@@ -44,7 +46,7 @@ export default class index extends Component {
         //创建地址解析器实例
         const myGeo = new BMapGL.Geocoder();
         // 将地址解析结果显示在地图上，并调整地图视野
-        myGeo.getPoint(label, (point) => {
+        myGeo.getPoint(label, async (point) => {
             if (point) {
                 // 初始化地图
                 map.centerAndZoom(point, 11);
@@ -56,41 +58,56 @@ export default class index extends Component {
                 map.addControl(new BMapGL.ZoomControl())
 
                 /**
-                 * 创建文本覆盖物
-                 * 1.创建 Label 实例对象
-                 * 2.调用 setStyle() 方法设置样式
-                 * 3.在 map 对象上调用 addOverlay() 方法，将文本覆盖物添加到地图中
+                 * 渲染所有区的覆盖物
+                 * 1、获取房源数据
+                 * 2、遍历数据，创建覆盖物，给每个覆盖物添加唯一标识
+                 * 3、给覆盖物添加单击事件
+                 * 4、在单击事件中，获取到当前单击项的唯一标识
+                 * 5、放大地图（级别为13）调用clearOverlays()方法清楚当前覆盖物
                  */
+                const { data: { body } } = await axios.get(`http://localhost:8080/area/map?id=${value}`)
+                // console.log(body);
+                body.forEach(item => {
+                    // 为每一条数据创建覆盖物
+                    const { coord: { latitude, longitude } } = item
+                    const areaPoint = new BMapGL.Point(longitude, latitude)
+                    const opts = {
+                        position: areaPoint,
+                        offset: new BMapGL.Size(-35, -35)
+                    }
+                    const label = new BMapGL.Label('', opts)
 
-                /**
-                 * 绘制房源覆盖物
-                 * 1.调用 Label 的 setContent() 方法，传入HTML结构，修改 HTML内容的样式
-                 * 2.调用 setStyle() 修改覆盖物样式
-                 * 3.为文本覆盖物添加单击事件
-                 */
+                    // 每个覆盖物添加唯一标识
+                    label.id = item.value
 
-
-                const opts = {
-                    position: point,
-                    offset: new BMapGL.Size(-35, -35)
-                }
-                const label = new BMapGL.Label('', opts)
-
-                //绘制
-                label.setContent(`
+                    //设置房源覆盖物的内容
+                    label.setContent(`
                 <div class="${styles.bubble}">
-                    <p class="${styles.name}">广州</p>
-                    <p>7套</p>
+                    <p class="${styles.name}">${item.label}</p>
+                    <p>${item.count}套</p>
                 </div>
                 `)
 
-                // 设置样式
-                label.setStyle(labelStyle)
-                // 添加覆盖物到地图中
-                map.addOverlay(label)
+                    // 设置样式
+                    label.setStyle(labelStyle)
+
+                    //  给覆盖物添加单击事件
+                    label.addEventListener('click', () => {
+                        console.log('房源覆盖物被点击了', label.id);
+                        // 放大地图，以当前点击的覆盖物为中心放大地图
+                        // 第一个参数，坐标对象
+                        // 第二个参数，放大级别
+                        map.centerAndZoom(areaPoint, 13);
+                        // 清除覆盖物
+                        setTimeout(() => {
+                            map.clearOverlays()
+                        }, 0);
+                    })
 
 
-
+                    // 添加覆盖物到地图中
+                    map.addOverlay(label)
+                })
             }
         }, label)
 
