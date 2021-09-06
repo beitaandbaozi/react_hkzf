@@ -4,9 +4,11 @@ import React, { Component } from 'react'
 import styles from './index.module.css'
 
 // import API from 'API'
-import {API} from '../../utils/api'
+import { API } from '../../utils/api'
 
 import { Link } from 'react-router-dom'
+
+import { BASE_URL } from '../../utils/url'
 
 import { Toast } from 'antd-mobile'
 // 引入组件
@@ -67,6 +69,17 @@ export default class Map extends Component {
                 this.renderOverlays(value)
             }
         }, label)
+
+
+        // 给地图绑定移动事件
+        map.addEventListener('movestart', () => {
+            // console.log('movestart')
+            if (this.state.isShowList) {
+                this.setState({
+                    isShowList: false
+                })
+            }
+        })
     }
 
     /**
@@ -204,22 +217,18 @@ export default class Map extends Component {
         label.setStyle(labelStyle)
 
         // 添加单击事件
-        label.addEventListener('click', () => {
-            /* 
-              1 创建 Label 、设置样式、设置 HTML 内容，绑定单击事件。
-              
-              2 在单击事件中，获取该小区的房源数据。
-              3 展示房源列表。
-              4 渲染获取到的房源数据。
-        
-              5 调用地图 panBy() 方法，移动地图到中间位置。
-              6 监听地图 movestart 事件，在地图移动时隐藏房源列表。
-            */
-
+        label.addEventListener('click', event => {
+            // 获取并渲染房源数据
             this.getHousesList(id)
 
-            // console.log('小区被点击了')
+            // 获取当前被点击项
+            const target = event.targetTouches[0]
+            this.map.panBy(
+                window.innerWidth / 2 - target.clientX,
+                (window.innerHeight - 330) / 2 - target.clientY
+            )
         })
+
         // 添加覆盖物到地图中
         this.map.addOverlay(label)
     }
@@ -230,6 +239,8 @@ export default class Map extends Component {
             Toast.loading('加载中...', 0, null, false)
             const res = await API.get(`/houses?cityId=${id}`)
             // console.log('小区的房源数据:', res)
+            // 关闭 Loading
+            Toast.hide()
 
             this.setState({
                 housesList: res.data.body.list,
@@ -253,7 +264,7 @@ export default class Map extends Component {
                 <div className={styles.imgWrap}>
                     <img
                         className={styles.img}
-                        src={`${item.houseImg}`}
+                        src={BASE_URL + item.houseImg}
                         alt=""
                     />
                 </div>
