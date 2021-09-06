@@ -3,7 +3,8 @@ import React, { Component } from 'react'
 // import './index.scss'
 import styles from './index.module.css'
 
-import axios from 'axios'
+// import API from 'API'
+import {API} from '../../utils/api'
 
 import { Link } from 'react-router-dom'
 
@@ -77,7 +78,7 @@ export default class Map extends Component {
         try {
             // 开启loading 效果
             Toast.loading('加载中...', 0, null, false)
-            const { data: { body } } = await axios.get(`http://localhost:8080/area/map?id=${id}`)
+            const { data: { body } } = await API.get(`/area/map?id=${id}`)
 
             // 关闭loading
             Toast.hide()
@@ -227,7 +228,7 @@ export default class Map extends Component {
         try {
             // 开启loading 效果
             Toast.loading('加载中...', 0, null, false)
-            const res = await axios.get(`http://localhost:8080/houses?cityId=${id}`)
+            const res = await API.get(`/houses?cityId=${id}`)
             // console.log('小区的房源数据:', res)
 
             this.setState({
@@ -252,7 +253,7 @@ export default class Map extends Component {
                 <div className={styles.imgWrap}>
                     <img
                         className={styles.img}
-                        src={`http://localhost:8080${item.houseImg}`}
+                        src={`${item.houseImg}`}
                         alt=""
                     />
                 </div>
