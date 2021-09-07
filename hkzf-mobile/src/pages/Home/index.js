@@ -2,12 +2,13 @@
 import React, { Component } from 'react'
 import New from '../New'
 import Index from '../Index'
+import './index.css'
 import HouseList from '../HouseList'
 import Profile from '../Profile'
 import { Route } from 'react-router'
 // 导入TabBar
 import { TabBar } from 'antd-mobile';
-import './index.css'
+
 
 /**
  * TabBar数据
