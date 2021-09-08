@@ -16,7 +16,6 @@ const titleList = [
   1 通过 props 接收，高亮状态对象 titleSelectedStatus。
   2 遍历 titleList 数组，渲染标题列表。
   3 判断高亮对象中当前标题是否高亮，如果是，就添加高亮类。
-
   4 给标题项绑定单击事件，在事件中调用父组件传过来的方法 onClick。
   5 将当前标题 type，通过 onClick 的参数，传递给父组件。
   6 父组件中接收到当前 type，修改该标题的选中状态为true。
