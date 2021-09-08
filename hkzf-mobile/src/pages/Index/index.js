@@ -11,13 +11,14 @@ import './index.scss'
 
 import {getCurrentCity} from '../../utils/index'
 
+// 导入搜索栏组件
+import SearchHeader from '../../components/SearchHeader';
+
 
 // 获取地理位置（经纬度等）
 navigator.geolocation.getCurrentPosition(position => {
     console.log('当前的位置', position);
 })
-
-
 
 
 
@@ -208,24 +209,7 @@ export default class index extends Component {
                         </Carousel> : ''
                     }
                     {/* 搜索框 */}
-                    <Flex className='search-box'>
-                        {/* 左侧白色区域 */}
-                        <Flex className="search">
-                            {/* 位置 */}
-                            <div className="location" onClick={() => this.props.history.push('/citylist')}>
-                                <span className="name">{this.state.cityName}</span>
-                                <i className="iconfont icon-arrow" />
-                            </div>
-
-                            {/* 搜索表单 */}
-                            <div className="form" onClick={() => this.props.history.push('/search')}>
-                                <i className="iconfont icon-seach" />
-                                <span className="text">请输入小区或地址</span>
-                            </div>
-                        </Flex>
-                        {/* 右侧地图图标 */}
-                        <i className="iconfont icon-map" onClick={() => this.props.history.push('/map')} />
-                    </Flex>
+                   <SearchHeader cityName={this.state.cityName}/>
                 </div>
                 {/* 导航菜单 */}
                 <Flex className='nav'>
